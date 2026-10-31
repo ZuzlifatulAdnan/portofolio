@@ -1,25 +1,24 @@
 # Panduan Deploy VPS Ubuntu + Nginx
 
-> Untuk uji coba lokal, cukup `npm run create-admin` dan `npm start` (lihat README). Di server produksi, **wajib HTTPS**, permission disk, backup, dan review keamanan. Jangan mengekspos SQLite / storage / konfigurasi ke web.
+> Untuk uji coba lokal, aktifkan MySQL, jalankan `npm install`, `npm run setup:local`, dan `npm start` (lihat README). Panduan di bawah hanya untuk tahap produksi berikutnya. Jangan mengekspos storage atau konfigurasi ke web.
 
 ## 1. Instal runtime Node.js
 
-Gunakan Node.js versi LTS yang kompatibel dengan `node:sqlite` dan **uji** `node --version` / `node -e "require('node:sqlite')"`. Proyek diuji dengan Node 22.16. Ikuti panduan paket resmi Node.js untuk instalasi pada sistem Anda.
+Gunakan Node.js LTS yang masih didukung, minimal versi 20.20, serta MySQL 8.0+. Proyek lokal diuji dengan Node.js 20.20.2 dan MySQL 8.4.3. Jalankan `npm ci` untuk memasang dependensi yang tercatat di package-lock.json.
 
 ## 2. Letakkan source
 
-Misal repo ditempatkan di `/opt/personal-it-portfolio`; buat user sistem khusus `portfolio` dengan permission minimum. Pastikan folder kode dimiliki user deploy, dan folder `DATA_DIR` dapat ditulis oleh user service. Jangan menyimpan berkas SQLite di direktori `public/`.
+Misal repo ditempatkan di `/opt/personal-it-portfolio`; buat user sistem khusus `portfolio`. Siapkan database dan akun MySQL khusus, lalu isi `DB_HOST`, `DB_PORT`, `DB_NAME`, `DB_USER`, dan `DB_PASSWORD` dalam `.env` privat. Akun aplikasi hanya memerlukan izin pada database portofolio. Folder `public/assets/uploads` harus dapat ditulis oleh service.
 
 ```bash
-sudo mkdir -p /var/lib/personal-it-portfolio
-sudo chown portfolio:portfolio /var/lib/personal-it-portfolio
-sudo chmod 700 /var/lib/personal-it-portfolio
 cd /opt/personal-it-portfolio
-npm test
+sudo -u portfolio npm run db:setup
 sudo -u portfolio npm run create-admin -- --email admin@domainanda.id
 ```
 
-Jika membuat admin melalui `sudo -u`, gunakan `DATA_DIR` yang sama seperti service produksi. Password dimasukkan melalui prompt interaktif di terminal.
+Gunakan `.env` yang sama seperti service produksi. Password admin dimasukkan melalui prompt interaktif. Jalankan `npm test` pada lingkungan pengembangan dengan akun MySQL pengujian yang memiliki izin CREATE/DROP DATABASE; tes menggunakan database acak terpisah.
+
+Isi `MFA_ENCRYPTION_KEY` pada `.env` privat dengan 32 byte acak base64. Bila memindahkan akun yang sudah aktif MFA, gunakan kunci lokal yang sama dalam bentuk base64. Backup kunci terpisah dari database; jangan menggantinya saat MFA aktif. Lihat [panduan MFA](MFA_DAN_SEARCH_CONSOLE.md).
 
 ## 3. Unit systemd
 
@@ -39,14 +38,14 @@ Environment=NODE_ENV=production
 Environment=HOST=127.0.0.1
 Environment=PORT=3000
 Environment=APP_ORIGIN=https://portfolio.example.com
-Environment=DATA_DIR=/var/lib/personal-it-portfolio
+EnvironmentFile=/opt/personal-it-portfolio/.env
 ExecStart=/usr/bin/node server/index.js
 Restart=on-failure
 RestartSec=5
 NoNewPrivileges=true
 PrivateTmp=true
 ProtectSystem=full
-ReadWritePaths=/var/lib/personal-it-portfolio /opt/personal-it-portfolio/public/assets/uploads
+ReadWritePaths=/opt/personal-it-portfolio/public/assets/uploads
 
 [Install]
 WantedBy=multi-user.target
@@ -91,12 +90,13 @@ Terbitkan sertifikat TLS sebelum mengaktifkan konfigurasi HTTPS di atas. Pastika
 
 ## 5. Backup & operasional
 
-- Backup **database SQLite secara konsisten** menggunakan perintah backup API/SQLite backup procedure yang aman saat proses berjalan; untuk sederhana, jadwalkan maintenance singkat sebelum menyalin file DB beserta berkas media.
+- Backup **database MySQL** dengan `mysqldump --single-transaction --no-tablespaces -u USER -p portfolio_cms > portfolio_cms.sql` menggunakan akun backup yang sesuai; `-p` meminta password secara interaktif.
 - Backup folder `/opt/personal-it-portfolio/public/assets/uploads/`.
+- Backup kunci `MFA_ENCRYPTION_KEY` secara terenkripsi dan terpisah dari database. Untuk pengembangan lokal, kunci berada di `storage/mfa.key` setelah setup pertama.
 - Simpan backup di lokasi privat, terenkripsi, dan uji restore berkala.
 - Atur monitoring uptime dan resource; update Node.js dan paket OS secara rutin.
 - Atur policy retensi data untuk contact messages; jangan simpan pesan pribadi selamanya.
-- Untuk skala lebih besar, pindahkan DB ke MySQL/PostgreSQL dan gunakan framework web yang memiliki autentikasi matang.
+- Backend ini sudah menggunakan MySQL. Untuk pengembangan lebih lanjut, pertimbangkan framework dengan autentikasi matang sesuai kebutuhan.
 
 ## 6. Keterbatasan cPanel
 

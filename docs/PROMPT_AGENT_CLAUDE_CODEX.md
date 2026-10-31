@@ -18,10 +18,10 @@ BACA KONTEKS TERLEBIH DAHULU (hanya file yang relevan)
 5. docs/DEPLOYMENT_VPS.md, docs/CHECKLIST_KONTEN_ASLI.md.
 
 STATUS AWAL REPOSITORY — JANGAN MEMBUAT ULANG YANG SUDAH ADA
-- Node.js native HTTP + SQLite bawaan node:sqlite.
+- Node.js native HTTP + MySQL melalui mysql2, konfigurasi .env melalui dotenv.
 - Public bilingual ID/EN, switching bahasa, animasi, dark/light, filter proyek dan modal case study.
 - Admin /admin dengan autentikasi scrypt, session DB, CSRF, CRUD konten per bahasa, upload gambar/PDF, inbox pesan.
-- Tidak ada admin default. Admin dibuat dengan `npm run create-admin -- --email ...`.
+- Setup lokal: `npm run setup:local` membuat admin lokal dengan password acak di storage/AKSES_LOKAL.txt jika belum ada admin. Admin dengan email sendiri dibuat melalui `npm run create-admin -- --email ...`.
 - Data awal contoh/draft, bukan klaim pekerjaan/sertifikasi sudah selesai.
 - Test dasar berjalan dengan `npm test`.
 
@@ -67,7 +67,7 @@ P4 — Keamanan & deployment
 - Rate limit login dan contact persistent (DB/Redis) untuk multi-proses, session expiry/revocation, safe admin password management, audit trail.
 - Tambahkan security tests untuk unauthorized access, CSRF, brute-force, XSS, path traversal, upload spoofing, IDOR, privacy contact messages.
 - Hindari account enumeration; proteksi secrets dan backups; dokumentasikan HTTPS reverse proxy Nginx, systemd/PM2 sesuai stack, log rotation.
-- Jika SQLite/Node bawaan kurang tepat untuk produksi target pengguna, rekomendasikan migrasi Laravel+MySQL TERPISAH dan minta keputusan stack; jangan diam-diam merombak proyek.
+- Pertahankan Node.js + MySQL pada versi ini. Migrasi framework ke Laravel merupakan pekerjaan terpisah yang memerlukan permintaan pengguna.
 
 DELIVERABLE
 1. Source code fungsional di repo ini (bukan deskripsi atau desain saja).

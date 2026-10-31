@@ -15,20 +15,26 @@
   skills:{name:'Teknologi & Tools',icon:'⌘',description:'Daftar kemampuan teknis, bahasa pemrograman, framework, dan tools.',fields:[['title','Kategori Keahlian'],['icon','Ikon'],['items','Teknologi (satu per baris)','lines']]},
   certifications:{name:'Sertifikasi',icon:'✳',description:'Tambahkan sertifikasi BNSP/pribadi yang benar-benar dimiliki dengan lembaga penerbit, tanggal, dan tautan bukti.',fields:[['issuer','Lembaga Penerbit (BNSP / lainnya)'],['name','Nama Sertifikasi / Skema'],['subtitle','Deskripsi Kompetensi','long'],['year','Tahun / Masa Berlaku'],['number','Nomor Sertifikat (jangan tampilkan data sensitif)'],['status','Status'],['image','Dokumen Sertifikat (PDF atau Gambar)','file'],['url','URL Verifikasi Resmi','url']]},
   steps:{name:'Proses Kerja',icon:'↗',description:'Jelaskan pendekatan kerja profesional dari analisis hingga pemeliharaan.',fields:[['number','Nomor'],['title','Tahap'],['subtitle','Deskripsi Tahap','long']]},
+  faqs:{name:'FAQ',icon:'?',description:'Kelola pertanyaan dan jawaban untuk pengunjung. Hanya FAQ published yang tampil di website.',fields:[['id','ID FAQ'],['visibility','Status publikasi','publication'],['question','Pertanyaan'],['answer','Jawaban','long']]},
+  testimonials:{name:'Testimoni',icon:'❞',description:'Tambahkan kutipan asli dari kolaborator. Publikasikan setelah mendapat izin dari pemberi testimoni.',fields:[['id','ID testimoni'],['visibility','Status publikasi','publication'],['consent','Izin publikasi dari pemberi testimoni','consent'],['name','Nama pemberi testimoni'],['role','Peran / jabatan'],['company','Organisasi (opsional)'],['quote','Kutipan asli yang diizinkan','long'],['avatarUrl','Foto pemberi testimoni (opsional)','file']]},
   messages:{name:'Pesan Masuk',icon:'✉',description:'Pesan yang dikirim melalui formulir publik.'},
-  media:{name:'Media Library',icon:'▥',description:'Foto, bukti proyek, sertifikat, dan CV.'}
+  media:{name:'Media Library',icon:'▥',description:'Foto, bukti proyek, sertifikat, dan CV.'},
+  seo:{name:'SEO & Mesin Pencari',icon:'⌕',description:'Atur judul, deskripsi, pratinjau sosial, dan indeks website dalam dua bahasa.'},
+  appearance:{name:'Warna & Tampilan',icon:'◐',description:'Sesuaikan identitas visual untuk tema gelap dan terang.'},
+  security:{name:'Keamanan',icon:'◇',description:'Kelola password, sesi aktif, dan riwayat aktivitas akun Anda.'}
  };
- const collectionKeys=new Set(['socials','services','projects','experiences','skills','certifications','steps']);
+ const collectionKeys=new Set(['socials','services','projects','experiences','skills','certifications','steps','faqs','testimonials']);
  let csrf='',currentLocale='id',activeSection='profile',selectedIndex=0,content=null,dirty=false,selectFileInput=null,toastTimer=null;
  async function api(url,options={}){
   const response=await fetch(url,{credentials:'same-origin',...options,headers:{...(options.body?{'Content-Type':'application/json'}:{}),...(options.method&&options.method!=='GET'?{'X-CSRF-Token':csrf}:{}),...(options.headers||{})}});
   let data;try{data=await response.json()}catch{data={error:'Unexpected server response'}}
-  if(!response.ok)throw new Error(data.error||`HTTP ${response.status}`);
+  if(response.status===401&&!url.endsWith('/login')&&!url.includes('/mfa/verify')&&!url.includes('/mfa/cancel-login')){csrf='';content=null;showLogin('Sesi Anda telah berakhir. Silakan masuk kembali.')}
+  if(!response.ok){const error=new Error(data.error||`HTTP ${response.status}`);error.status=response.status;throw error}
   return data;
  }
  function notify(message,error=false){const el=$('#toast');el.textContent=message;el.style.background=error?'#ffa19b':'';el.classList.add('show');clearTimeout(toastTimer);toastTimer=setTimeout(()=>{el.classList.remove('show');el.style.background=''},3600)}
- function updateDirty(value=true){dirty=value;const el=$('#unsaved-label');el.textContent=value?'● Ada perubahan belum disimpan':'✓ Semua perubahan tersimpan';el.classList.toggle('dirty',value)}
- function showLogin(){ $('#login-layout').hidden=false;$('#admin-layout').hidden=true; }
+ function updateDirty(value=true){dirty=value;const el=$('#unsaved-label');el.textContent=value?'● Ada perubahan belum disimpan':'✓ Semua perubahan tersimpan';el.classList.toggle('dirty',value);window.AdminTranslation?.refresh()}
+ function showLogin(message=''){ $('#login-layout').hidden=false;$('#admin-layout').hidden=true;$('#login-form').hidden=false;$('#mfa-login-form').hidden=true;$('#login-mfa-code').value='';$('#login-alert').hidden=!message;$('#login-alert').textContent=message;dirty=false;window.dispatchEvent(new Event('admin:logout')); }
  async function showDashboard(admin){$('#login-layout').hidden=true;$('#admin-layout').hidden=false;$('#admin-name').textContent=admin.name;$('#admin-email').textContent=admin.email;renderMenu();await loadContent()}
  async function init(){
   try{const s=await api('/admin/api/session');if(s.authenticated){csrf=s.csrf;await showDashboard(s.admin)}else showLogin()}
@@ -39,12 +45,29 @@
   try{
    const token=await api('/admin/api/login-csrf');
    const data=await api('/admin/api/login',{method:'POST',headers:{'X-CSRF-Token':token.csrf},body:JSON.stringify({email:$('#login-email').value,password:$('#login-password').value})});
-   csrf=data.csrf;$('#login-password').value='';await showDashboard(data.admin);notify('Berhasil masuk ke dashboard');
+   csrf=data.csrf;$('#login-password').value='';
+   if(data.mfaRequired){$('#login-form').hidden=true;$('#mfa-login-form').hidden=false;$('#mfa-login-alert').hidden=true;setRecoveryMode(false);$('#login-mfa-code').focus();return}
+   await showDashboard(data.admin);notify('Berhasil masuk ke dashboard');
   }catch(err){$('#login-alert').hidden=false;$('#login-alert').textContent=err.message}
   finally{button.disabled=false}
  });
+ let recoveryMode=false;
+ function setRecoveryMode(value){
+  recoveryMode=value;const input=$('#login-mfa-code');input.value='';input.inputMode=value?'text':'numeric';input.maxLength=value?40:6;input.autocomplete=value?'off':'one-time-code';
+  if(value)input.removeAttribute('pattern');else input.pattern='[0-9]{6}';
+  $('#login-mfa-label').textContent=value?'Kode pemulihan':'Kode autentikator';$('#mfa-use-recovery').textContent=value?'Gunakan kode autentikator':'Gunakan kode pemulihan';
+  $('#mfa-login-help').textContent=value?'Masukkan satu kode pemulihan yang belum pernah dipakai. Setelah berhasil, kode tersebut tidak dapat digunakan lagi.':'Masukkan kode 6 digit dari aplikasi autentikator. Password saja belum membuka dashboard.';
+ }
+ $('#mfa-use-recovery').addEventListener('click',()=>{setRecoveryMode(!recoveryMode);$('#login-mfa-code').focus()});
+ $('#mfa-back-login').addEventListener('click',async()=>{try{await api('/admin/api/mfa/cancel-login',{method:'POST',body:'{}'})}catch(error){notify(error.message,true)}finally{csrf='';showLogin();$('#login-password').focus()}});
+ $('#mfa-login-form').addEventListener('submit',async event=>{
+  event.preventDefault();const button=$('#mfa-login-submit');button.disabled=true;$('#mfa-login-alert').hidden=true;
+  try{const data=await api('/admin/api/mfa/verify',{method:'POST',body:JSON.stringify({code:$('#login-mfa-code').value.trim()})});csrf=data.csrf;$('#login-mfa-code').value='';await showDashboard(data.admin);notify('Berhasil masuk dengan MFA')}
+  catch(error){if(error.status===401){csrf='';showLogin(error.message)}else{$('#mfa-login-alert').textContent=error.message;$('#mfa-login-alert').hidden=false;$('#login-mfa-code').select()}}
+  finally{button.disabled=false}
+ });
  async function logOut(){
-  if(dirty && !confirm('Ada perubahan yang belum disimpan. Yakin ingin keluar?'))return;
+  if((dirty||window.AdminSettings?.dirty()) && !confirm('Ada perubahan yang belum disimpan. Yakin ingin keluar?'))return;
   try{await api('/admin/api/logout',{method:'POST',body:JSON.stringify({})});csrf='';content=null;showLogin();notify('Anda telah keluar')}
   catch(e){notify(e.message,true)}
  }
@@ -53,10 +76,16 @@
  function renderMenu(){
   $('#sidebar-nav').replaceChildren();
   for(const [key,d] of Object.entries(defs)){
+   if(key==='seo'){const label=document.createElement('div');label.className='sidebar-heading nav-settings-heading';label.textContent='PENGATURAN WEBSITE';$('#sidebar-nav').append(label)}
    const b=document.createElement('button');b.type='button';b.className=key===activeSection?'active':'';
-   const icon=document.createElement('span');icon.className='nav-icon';icon.textContent=d.icon;
+   if(['seo','appearance','security'].includes(key))b.classList.add('settings-nav');
+   if(key===activeSection)b.setAttribute('aria-current','page');
+   const icon=document.createElement('span');icon.className='nav-icon';icon.textContent=d.icon;icon.setAttribute('aria-hidden','true');
    const name=document.createElement('span');name.textContent=d.name;b.append(icon,name);
-   b.addEventListener('click',()=>{activeSection=key;selectedIndex=0;renderMenu();renderSection()});
+   b.addEventListener('click',()=>{
+    if(window.AdminSettings?.dirty()&&!confirm('Pengaturan belum disimpan. Buang perubahan dan pindah menu?'))return;
+    activeSection=key;selectedIndex=0;renderMenu();renderSection();
+   });
    $('#sidebar-nav').append(b);
   }
  }
@@ -68,15 +97,27 @@
  }
  async function switchLocale(to){
   if(to===currentLocale)return;
+  if(window.AdminSettings?.dirty()&&!confirm('Pengaturan belum disimpan. Buang perubahan dan beralih bahasa?'))return;
   if(dirty&&!confirm('Perubahan saat ini belum disimpan. Beralih bahasa akan membuang perubahan tersebut. Lanjutkan?'))return;
   currentLocale=to;selectedIndex=0;await loadContent();
  }
  $$('[data-locale]').forEach(b=>b.addEventListener('click',()=>switchLocale(b.dataset.locale).catch(e=>notify(e.message,true))));
  function renderSection(){
   const def=defs[activeSection];$('#breadcrumb').textContent=def.name;$('#page-title').textContent=def.name;$('#page-description').textContent=def.description;
-  const special=['messages','media'].includes(activeSection);
+  const settingsSection=['seo','appearance','security'].includes(activeSection);
+  const special=['messages','media','seo','appearance','security'].includes(activeSection);
   $('#editor-view').hidden=special;$('#messages-view').hidden=activeSection!=='messages';$('#media-view').hidden=activeSection!=='media';
   $('#content-notice').hidden=special;
+  $('#settings-view').hidden=!settingsSection;
+  $('.page-hero-right').hidden=['appearance','security'].includes(activeSection);
+  const translationVisible=!['appearance','security','messages','media'].includes(activeSection);
+  $('#translation-tools').hidden=!translationVisible;
+  if(translationVisible)window.AdminTranslation?.update(currentLocale,{api,notify,isDirty:()=>dirty||Boolean(window.AdminSettings?.dirty()),onApplied:target=>switchLocale(target)});
+  if(settingsSection){
+   window.AdminSettings?.open(activeSection,currentLocale,{api,notify,onSessionChanged:value=>{csrf=value},onPasswordChanged:()=>{csrf='';content=null;showLogin();notify('Password berhasil diganti. Semua sesi telah keluar. Silakan masuk kembali.')}});
+   return;
+  }
+  window.AdminSettings?.close();
   if(activeSection==='messages'){loadMessages();return}
   if(activeSection==='media'){loadMedia();return}
   const arr=collectionKeys.has(activeSection)?content[activeSection]:null;
@@ -88,7 +129,7 @@
   if(arr){selectedIndex=Math.min(Math.max(0,selectedIndex),Math.max(0,arr.length-1));renderItemList(arr)}
   renderFields();
  }
- function labelOf(item,index){return item?.title||item?.name||item?.label||item?.issuer||`Item ${index+1}`}
+ function labelOf(item,index){return item?.question||item?.title||item?.name||item?.label||item?.issuer||`Item ${index+1}`}
  function renderItemList(arr){
   const root=$('#item-list');root.replaceChildren();
   if(!arr.length){const p=document.createElement('p');p.className='empty-state';p.textContent='Belum ada item. Klik + Tambah.';root.append(p);return}
@@ -108,11 +149,11 @@
   let input;
   if(['long','lines','paragraphs'].includes(kind)){
    input=document.createElement('textarea');input.rows=kind==='paragraphs'?6:kind==='long'?4:5;
-  }else if(kind==='category'||kind==='icon'||kind==='visibility'){
+  }else if(['category','icon','visibility','publication','consent'].includes(kind)){
    input=document.createElement('select');
-   const options=kind==='category'?['web','mobile','network','support']:kind==='visibility'?['draft','demo','published']:['code','phone','network','headset','server','workflow'];
+   const options=kind==='category'?['web','mobile','network','support']:kind==='visibility'?['draft','demo','published']:kind==='publication'?['draft','published']:kind==='consent'?['pending','granted']:['code','phone','network','headset','server','workflow'];
    const current=String(record[key]??'');if(current&&!options.includes(current))options.unshift(current);
-   options.forEach(value=>{const opt=document.createElement('option');opt.value=value;opt.textContent=value;input.append(opt)});
+   options.forEach(value=>{const opt=document.createElement('option');opt.value=value;opt.textContent=kind==='consent'?({pending:'Belum ada izin',granted:'Izin publikasi diterima'}[value]||value):value;input.append(opt)});
   }else{
    input=document.createElement('input');input.type=kind==='url'?'url':'text';
   }
@@ -120,6 +161,9 @@
   if(kind==='url')input.placeholder='https://example.com';
   input.addEventListener('input',()=>{
    record[key]=fromFormValue(input.value,kind);updateDirty();
+   if(activeSection==='testimonials'&&key==='consent'&&record.consent==='pending'&&record.visibility==='published'){
+    record.visibility='draft';$('#field-visibility').value='draft';notify('Testimoni diubah ke draft. Simpan untuk menyembunyikannya dari website.');
+   }
    if(['name','title','label'].includes(key)&&collectionKeys.has(activeSection))renderItemList(content[activeSection]);
   });
   container.append(lbl);
@@ -130,7 +174,7 @@
    wrap.append(button);container.append(wrap);
   }else container.append(input);
   if(kind==='lines'||kind==='paragraphs'){
-   const hint=document.createElement('small');hint.textContent=kind==='paragraphs'?'Pisahkan paragraf menggunakan satu baris kosong.':'Tulis satu item pada setiap baris.';container.append(hint)
+   const hint=document.createElement('small');hint.textContent=kind==='paragraphs'?'Pisahkan paragraf menggunakan satu baris kosong.':activeSection==='skills'&&key==='items'?'Tulis satu teknologi per baris. Logo dikenali otomatis dari nama; istilah umum memakai ikon kategori.':'Tulis satu item pada setiap baris.';container.append(hint)
   }
   if(kind==='file'){
    const hint=document.createElement('small');hint.textContent='Gunakan berkas PNG/JPG/WebP atau PDF (maksimal 7 MB). Tautan terisi otomatis setelah unggah.';container.append(hint)
@@ -153,6 +197,8 @@
   if(activeSection==='services')Object.assign(item,{number:String(content.services.length+1).padStart(2,'0'),icon:'code',tone:'lime'});
   if(activeSection==='skills')item.icon='code';
   if(activeSection==='steps')item.number=String(content.steps.length+1).padStart(2,'0');
+  if(['faqs','testimonials'].includes(activeSection))Object.assign(item,{id:`${activeSection}-${Date.now()}-${Math.random().toString(36).slice(2,6)}`,visibility:'draft'});
+  if(activeSection==='testimonials')item.consent='pending';
   content[activeSection].push(item);selectedIndex=content[activeSection].length-1;updateDirty();renderSection();
   $('#form-fields input, #form-fields textarea')?.focus();
  }
@@ -213,5 +259,6 @@
  }
  $('#upload-media').addEventListener('click',()=>{selectFileInput=null;$('#file-picker').accept='image/png,image/jpeg,image/webp,application/pdf';$('#file-picker').click()});
  window.addEventListener('beforeunload',e=>{if(dirty){e.preventDefault();e.returnValue=''}});
+ window.addEventListener('admin:logout',()=>window.AdminSettings?.close());
  init();
 })();

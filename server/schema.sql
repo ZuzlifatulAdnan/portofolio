@@ -13,8 +13,63 @@ CREATE TABLE IF NOT EXISTS sessions (
  csrf_token VARCHAR(64) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
  created_at BIGINT UNSIGNED NOT NULL,
  expires_at BIGINT UNSIGNED NOT NULL,
+ last_seen_at BIGINT UNSIGNED NOT NULL DEFAULT 0,
+ auth_version INT UNSIGNED NOT NULL DEFAULT 0,
+ mfa_verified TINYINT UNSIGNED NOT NULL DEFAULT 0,
  INDEX idx_sessions_expiry (expires_at),
  FOREIGN KEY (admin_id) REFERENCES admins(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS site_settings (
+ id TINYINT UNSIGNED PRIMARY KEY,
+ payload JSON NOT NULL,
+ updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS admin_mfa (
+ admin_id INT UNSIGNED PRIMARY KEY,
+ enabled TINYINT UNSIGNED NOT NULL DEFAULT 0,
+ secret_ciphertext TEXT NULL,
+ last_step BIGINT NOT NULL DEFAULT -1,
+ auth_version INT UNSIGNED NOT NULL DEFAULT 0,
+ updated_at DATETIME NOT NULL DEFAULT CURRENT_TIMESTAMP,
+ FOREIGN KEY (admin_id) REFERENCES admins(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS mfa_enrollments (
+ admin_id INT UNSIGNED PRIMARY KEY,
+ secret_ciphertext TEXT NOT NULL,
+ session_hash CHAR(64) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+ password_fingerprint CHAR(64) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+ expires_at BIGINT UNSIGNED NOT NULL,
+ FOREIGN KEY (admin_id) REFERENCES admins(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS mfa_challenges (
+ token_hash CHAR(64) CHARACTER SET ascii COLLATE ascii_bin PRIMARY KEY,
+ admin_id INT UNSIGNED NOT NULL,
+ csrf_token VARCHAR(64) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+ client_hash CHAR(64) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+ auth_version INT UNSIGNED NOT NULL,
+ expires_at BIGINT UNSIGNED NOT NULL,
+ tries INT UNSIGNED NOT NULL DEFAULT 0,
+ INDEX idx_mfa_challenge_expiry (expires_at),
+ FOREIGN KEY (admin_id) REFERENCES admins(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS mfa_recovery_codes (
+ admin_id INT UNSIGNED NOT NULL,
+ code_hash CHAR(64) CHARACTER SET ascii COLLATE ascii_bin NOT NULL,
+ used_at BIGINT UNSIGNED NULL,
+ PRIMARY KEY (admin_id,code_hash),
+ FOREIGN KEY (admin_id) REFERENCES admins(id) ON DELETE CASCADE
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+CREATE TABLE IF NOT EXISTS rate_limits (
+ lookup_key CHAR(64) CHARACTER SET ascii COLLATE ascii_bin PRIMARY KEY,
+ hits INT UNSIGNED NOT NULL DEFAULT 0,
+ expires_at BIGINT UNSIGNED NOT NULL,
+ INDEX idx_rate_limits_expiry (expires_at)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
 CREATE TABLE IF NOT EXISTS content (

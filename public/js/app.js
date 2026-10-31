@@ -1,16 +1,18 @@
 (async () => {
   'use strict';
+  let bootstrap=null;
+  try{bootstrap=JSON.parse(document.getElementById('portfolio-bootstrap')?.textContent||'null')}catch{}
   const params = new URLSearchParams(location.search);
   const localeFromUrl = params.get('lang');
   let savedLocale = 'id';
   try { savedLocale = localStorage.getItem('personal-portfolio-lang') || 'id'; } catch (_) {}
-  const locale = ['id','en'].includes(localeFromUrl) ? localeFromUrl : (['id','en'].includes(savedLocale) ? savedLocale : 'id');
+  const locale = bootstrap?.locale || (['id','en'].includes(localeFromUrl) ? localeFromUrl : (['id','en'].includes(savedLocale) ? savedLocale : 'id'));
   try { localStorage.setItem('personal-portfolio-lang',locale); } catch (_) {}
   document.documentElement.lang = locale;
   const t = key => (window.PORTFOLIO_UI?.[locale]?.[key] ?? window.PORTFOLIO_UI?.id?.[key] ?? key);
-  let hasBackend = false;
-  let P = window.PORTFOLIO_SEED?.[locale];
-  if (location.protocol !== 'file:') {
+  let hasBackend = Boolean(bootstrap);
+  let P = bootstrap?.content || window.PORTFOLIO_SEED?.[locale];
+  if (!bootstrap && location.protocol !== 'file:') {
     try {
       const response = await fetch(`/api/public/content?lang=${locale}`, { credentials:'same-origin', cache:'no-store' });
       if (response.ok) {
@@ -35,17 +37,20 @@
       location.href=nextUrl.href;
     });
   });
-  document.querySelector('meta[name="description"]')?.setAttribute('content',t('seoDescription'));
-  document.querySelector('meta[property="og:description"]')?.setAttribute('content',t('seoDescription'));
-  document.querySelector('meta[property="og:title"]')?.setAttribute('content',`${P.fullName || 'Personal Portfolio'} — ${locale === 'en' ? 'IT Developer Portfolio' : 'Portofolio IT Developer'}`);
+  if(!bootstrap){
+   document.querySelector('meta[name="description"]')?.setAttribute('content',t('seoDescription'));
+   document.querySelector('meta[property="og:description"]')?.setAttribute('content',t('seoDescription'));
+   document.querySelector('meta[property="og:title"]')?.setAttribute('content',`${P.fullName || 'Personal Portfolio'} — ${locale === 'en' ? 'IT Developer Portfolio' : 'Portofolio IT Developer'}`);
+  }
 
   const $ = (selector, root = document) => root.querySelector(selector);
   const $$ = (selector, root = document) => Array.from(root.querySelectorAll(selector));
   const esc = (value) => String(value == null ? '' : value).replace(/[&<>"']/g, (char) => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[char]));
-  const icon = (name, cls = '') => `<svg class="icon ${cls}" aria-hidden="true"><use href="#i-${name}"></use></svg>`;
+  const icon = (name, cls = '') => `<svg class="icon ${esc(cls)}" aria-hidden="true"><use href="#i-${/^[a-z][a-z0-9-]{0,40}$/.test(name)?name:'code'}"></use></svg>`;
   const mediaPath = (path) => typeof path === 'string' && /^(?:assets\/|\.\/?\/)/.test(path) && !path.includes('..') ? path : '';
   const safeExternal = (url) => { try { const u = new URL(url); return ['http:','https:'].includes(u.protocol) ? u.href : ''; } catch { return ''; } };
   const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)');
+  const animationsDisabled=document.documentElement.dataset.motion==='reduced';
 
   // Identity, basic metadata, and personal links.
   // This is an individual's portfolio. Use their full name everywhere, not a company name.
@@ -58,7 +63,7 @@
     node.closest('a')?.setAttribute('aria-label',`${brand} — ${locale === 'en' ? 'back to home' : 'kembali ke beranda'}`);
   });
   $('#hero-person-name').innerHTML = `${locale === 'en' ? "HELLO, I'M" : 'HALO, SAYA'} <strong>${esc(brand)}</strong> <span class="name-arrow">↗</span>`;
-  document.title = `${brand} — ${locale === 'en' ? 'Personal IT Developer Portfolio' : 'Portofolio Pribadi IT Developer'}`;
+  document.title = bootstrap?.meta?.title || `${brand} — ${locale === 'en' ? 'Personal IT Developer Portfolio' : 'Portofolio Pribadi IT Developer'}`;
   document.querySelector('meta[name="author"]')?.setAttribute('content', brand);
   $('#footer-brand').textContent = brand;
   $('#year').textContent = new Date().getFullYear();
@@ -86,7 +91,7 @@
   $('#ticker-track').innerHTML = `<div class="ticker-run">${tickerRun}</div><div class="ticker-run" aria-hidden="true">${tickerRun}</div>`;
 
   // Service cards.
-  $('#service-grid').innerHTML = P.services.map((s,i) => `<article class="service-card ${esc(s.tone)} reveal" style="transition-delay:${i*75}ms"><div class="service-card-top"><span class="service-icon">${icon(s.icon)}</span><span class="service-number">${esc(s.number)} / 04</span></div><div class="service-content"><div class="service-label">${esc(s.label)}</div><h3>${esc(s.title)}</h3><p>${esc(s.summary)}</p><div class="service-tags">${s.tags.map(t => `<span>${esc(t)}</span>`).join('')}</div></div></article>`).join('');
+  $('#service-grid').innerHTML = P.services.map((s,i) => `<article class="service-card ${esc(s.tone)} reveal" style="transition-delay:${i*75}ms"><div class="service-card-top"><span class="service-icon">${icon(s.icon)}</span><span class="service-number">${esc(s.number)} / 04</span></div><div class="service-content"><div class="service-label">${esc(s.label)}</div><h3>${esc(s.title)}</h3><p>${esc(s.summary)}</p><div class="service-tags">${s.tags.map(window.PortfolioTech.tag).join('')}</div></div></article>`).join('');
 
   // Portfolio visual concepts. No image here is presented as a real project screenshot.
   function artMarkup(project) {
@@ -116,8 +121,8 @@
   const filterRoot = $('#project-filters');
   filterRoot.innerHTML = filterList.map(([key,label],idx) => `<button type="button" class="filter-btn" data-filter="${key}" aria-pressed="${idx===0}">${label}</button>`).join('');
   const projectsRoot = $('#projects-grid');
-  const visibleProjects=P.projects.filter(p=>p.visibility!=='draft');
-  projectsRoot.innerHTML = visibleProjects.map((p,i) => `<article class="project-card reveal" data-category="${esc(p.category)}" style="transition-delay:${i%2*80}ms"><div class="project-preview-wrap" style="position:relative">${artMarkup(p)}<span class="project-preview-label">${esc(p.status.toUpperCase())}</span><span class="project-arrow">${icon('arrow-up-right')}</span><button type="button" class="card-open-button" data-open-project="${esc(p.id)}" aria-label="${esc(t('openProject'))} ${esc(p.title)}"></button></div><div class="project-info"><div class="project-meta"><span class="project-type">${esc(p.categoryLabel)}</span><span class="project-index">${esc(p.year)} / ${String(visibleProjects.length).padStart(2,'0')}</span></div><h3>${esc(p.title)}</h3><p class="project-subtitle">${esc(p.subtitle)}</p><div class="project-tag-row">${p.tags.map(tag=>`<span>${esc(tag)}</span>`).join('')}</div></div></article>`).join('');
+  const visibleProjects=P.projects.filter(p=>['demo','published'].includes(p.visibility));
+  projectsRoot.innerHTML = visibleProjects.map((p,i) => `<article class="project-card reveal" data-category="${esc(p.category)}" style="transition-delay:${i%2*80}ms"><div class="project-preview-wrap" style="position:relative">${artMarkup(p)}<span class="project-preview-label">${esc(p.status.toUpperCase())}</span><span class="project-arrow">${icon('arrow-up-right')}</span><button type="button" class="card-open-button" data-open-project="${esc(p.id)}" aria-label="${esc(t('openProject'))} ${esc(p.title)}"></button></div><div class="project-info"><div class="project-meta"><span class="project-type">${esc(p.categoryLabel)}</span><span class="project-index">${esc(p.year)} / ${String(visibleProjects.length).padStart(2,'0')}</span></div><h3>${esc(p.title)}</h3><p class="project-subtitle">${esc(p.subtitle)}</p><div class="project-tag-row">${p.tags.map(window.PortfolioTech.tag).join('')}</div></div></article>`).join('');
   let currentFilter = 'all';
   function setFilter(next) {
     currentFilter = next;
@@ -140,7 +145,7 @@
     $('#modal-content').innerHTML = `
       <span class="modal-eyebrow">${esc(project.categoryLabel)} &nbsp;/&nbsp; ${esc(project.status)}</span>
       <h2 id="modal-title">${esc(project.title)}</h2><p class="modal-subtitle">${esc(project.subtitle)}</p>
-      <div class="modal-pills">${project.tags.map(t=>`<span>${esc(t)}</span>`).join('')}<span>${esc(project.role)}</span></div>
+      <div class="modal-pills">${project.tags.map(window.PortfolioTech.tag).join('')}<span>${esc(project.role)}</span></div>
       <div class="modal-hero-art">${artMarkup(project)}</div>
       <div class="modal-grid"><div class="modal-section"><h3>${esc(t('modalChallenge'))}</h3><p>${esc(project.challenge)}</p></div><div class="modal-section"><h3>${esc(t('modalApproach'))}</h3><p>${esc(project.solution)}</p></div></div>
       <div class="modal-section" style="margin-top:23px"><h3>${esc(t('modalHighlights'))}</h3><ul class="modal-list">${project.highlights.map(item => `<li>${icon('check')} ${esc(item)}</li>`).join('')}</ul></div>
@@ -166,13 +171,16 @@
 
   // Timeline, skills and professional certificates.
   $('#experience-timeline').innerHTML = P.experiences.map((e,i) => `<article class="timeline-item reveal" style="transition-delay:${i*70}ms"><span class="timeline-type">${esc(e.type)}</span><h3>${esc(e.title)}</h3><p>${esc(e.detail)}</p><div class="timeline-points">${e.points.map(p=>`<span>${esc(p)}</span>`).join('')}</div></article>`).join('');
-  $('#skills-groups').innerHTML = P.skills.map(s => `<div class="skills-group"><h4>${icon(s.icon)} ${esc(s.title)}</h4><ul>${s.items.map(item=>`<li>${esc(item)}</li>`).join('')}</ul></div>`).join('');
+  $('#skills-groups').innerHTML = P.skills.map(s => `<div class="skills-group"><h4>${icon(s.icon)} ${esc(s.title)}</h4><ul>${s.items.map(window.PortfolioTech.skill).join('')}</ul></div>`).join('');
   $('#cert-grid').innerHTML = P.certifications.map((c,i) => {
     const url = safeExternal(c.url);
     const photo = mediaPath(c.image);
     return `<article class="cert-card reveal" style="transition-delay:${i*120}ms"><div class="cert-top"><div class="cert-issuer ${c.issuer==='BNSP'?'':'other'}">${esc(c.issuer)}</div><span class="cert-status">${esc(c.status)}</span></div><h3>${esc(c.name)}</h3><p class="cert-subtitle">${esc(c.subtitle)}</p><div class="cert-foot"><span>${esc(c.year)} · ${esc(c.number)}</span>${url ? `<a class="cert-view" href="${esc(url)}" target="_blank" rel="noopener noreferrer">${esc(t('verifyCert'))} ${icon('external')}</a>` : photo ? `<a class="cert-view" href="${esc(photo)}" target="_blank" rel="noopener noreferrer">${esc(t('viewCert'))} ${icon('external')}</a>` : `<span>${esc(t('uploadProof'))} ↗</span>`}</div><span class="cert-watermark" aria-hidden="true">${esc(c.issuer)}</span></article>`;
   }).join('');
   $('#process-grid').innerHTML = P.steps.map((s,i) => `<div class="process-item reveal" style="transition-delay:${i*90}ms"><div class="process-number">${esc(s.number)} / 05</div><h3>${esc(s.title)}</h3><p>${esc(s.subtitle)}</p></div>`).join('');
+  $('#contact .section-num').textContent='09 /';
+  $('#testimonials-grid').innerHTML=window.PortfolioSections.testimonials(P.testimonials,window.PORTFOLIO_UI[locale]);
+  $('#faq-list').innerHTML=window.PortfolioSections.faqs(P.faqs,window.PORTFOLIO_UI[locale]);
 
   // Contact: save into the database when the backend is active. Static preview falls back to mailto.
   const contactForm = $('#contact-form');
@@ -228,7 +236,7 @@
   // Reveal-on-scroll staggered animations; show instantly when reduced motion is enabled.
   function observeReveals() {
     const elements = $$('.reveal');
-    if (reduceMotion.matches || !('IntersectionObserver' in window)) { elements.forEach(el => el.classList.add('in-view')); return; }
+    if (animationsDisabled || reduceMotion.matches || !('IntersectionObserver' in window)) { elements.forEach(el => el.classList.add('in-view')); return; }
     const observer = new IntersectionObserver(entries => {
       entries.forEach(entry => { if(entry.isIntersecting){entry.target.classList.add('in-view');observer.unobserve(entry.target)} });
     },{threshold:.09,rootMargin:'0px 0px -32px 0px'});
@@ -261,7 +269,7 @@
 
   // Pointer spotlight, magnetic buttons and depth effects, only on non-touch devices.
   const finePointer=matchMedia('(hover: hover) and (pointer: fine)').matches;
-  if(finePointer && !reduceMotion.matches){
+  if(finePointer && !animationsDisabled && !reduceMotion.matches){
     const glow=$('#cursor-glow');
     let glowX=0,glowY=0,raf=0;
     document.addEventListener('pointermove',e=>{ glowX=e.clientX;glowY=e.clientY;glow.classList.add('visible');if(raf)return;raf=requestAnimationFrame(()=>{glow.style.left=glowX+'px';glow.style.top=glowY+'px';raf=0}) },{passive:true});
@@ -279,7 +287,7 @@
   function initParticles() {
     const canvas=$('#particle-canvas');
     const ctx=canvas.getContext('2d',{alpha:true});
-    if (!ctx || reduceMotion.matches) return;
+    if (!ctx || animationsDisabled || reduceMotion.matches) return;
     let particles=[],width=0,height=0,animationId=0,previous=0;
     const dpr=Math.min(window.devicePixelRatio||1,2);
     function resize(){
@@ -305,4 +313,4 @@
     reduceMotion.addEventListener('change',e=>{cancelAnimationFrame(animationId);if(!e.matches)animationId=requestAnimationFrame(frame)});
   }
   initParticles();
-})().catch(error => console.error('Portfolio initialization failed:', error));
+})().catch(error => console.error('Portfolio initialization failed:', error)).finally(()=>window.PortfolioSplash?.finish());

@@ -1,4 +1,11 @@
 {
+  "faqs": [
+    {"id":"start-conversation","question":"Bagaimana cara memulai diskusi?","answer":"Kirim pesan melalui formulir kontak atau gunakan tautan kontak pada profil. Sertakan kebutuhan, gambaran ruang lingkup, dan informasi yang boleh dibagikan untuk memulai percakapan.","visibility":"published"},
+    {"id":"project-contribution","question":"Di mana saya bisa melihat proyek dan kontribusi Anda?","answer":"Buka bagian proyek dan pilih Lihat detail. Setiap studi kasus menyediakan ruang untuk tantangan, pendekatan, teknologi, hasil, serta kontribusi pribadi. Proyek contoh diberi label demo.","visibility":"published"},
+    {"id":"portfolio-languages","question":"Apakah portofolio tersedia dalam dua bahasa?","answer":"Ya. Gunakan tombol ID atau EN di bagian atas halaman untuk memilih Bahasa Indonesia atau English.","visibility":"published"},
+    {"id":"documents-and-certificates","question":"Bagaimana mengakses CV atau bukti sertifikasi?","answer":"Dokumen yang sudah disediakan dapat diakses melalui tombol CV atau tautan pada kartu sertifikasi. Jika berkas yang Anda perlukan belum tersedia, silakan hubungi melalui formulir kontak.","visibility":"published"}
+  ],
+  "testimonials": [],
   "brand": "Nama Anda",
   "brandSuffix": "IT Developer",
   "fullName": "Nama Lengkap Anda",

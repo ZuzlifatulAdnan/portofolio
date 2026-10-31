@@ -82,7 +82,18 @@
     "labelExperience": "PENGALAMAN & KEAHLIAN",
     "labelCredentials": "SERTIFIKASI & PELATIHAN",
     "labelProcess": "CARA SAYA BEKERJA",
-    "labelContact": "MARI TERHUBUNG"
+    "labelContact": "MARI TERHUBUNG",
+    "labelTestimonials": "CERITA KOLABORASI",
+    "testimonialsTitle": "Perspektif dari<br><span class=\"muted-title\">sebuah kolaborasi.</span>",
+    "testimonialsText": "Cerita dan pengalaman dari mereka yang bekerja bersama saya.",
+    "testimonialsEmptyTitle": "Ruang untuk cerita kolaborasi.",
+    "testimonialsEmpty": "Belum ada testimoni yang dipublikasikan.",
+    "testimonialsCTA": "Jelajahi proyek",
+    "labelFAQ": "PERTANYAAN UMUM",
+    "faqTitle": "Sebelum kita<br><span class=\"muted-title\">mulai berbincang.</span>",
+    "faqText": "Beberapa hal yang mungkin ingin Anda ketahui tentang portofolio ini.",
+    "faqCTA": "Tanyakan hal lainnya",
+    "faqEmpty": "Belum ada pertanyaan yang dipublikasikan. Silakan hubungi saya untuk informasi lainnya."
   },
   "en": {
     "skip": "Skip to content",
@@ -167,6 +178,17 @@
     "labelExperience": "EXPERIENCE & SKILLS",
     "labelCredentials": "CERTIFICATIONS & TRAINING",
     "labelProcess": "HOW I WORK",
-    "labelContact": "LET'S CONNECT"
+    "labelContact": "LET'S CONNECT",
+    "labelTestimonials": "COLLABORATION STORIES",
+    "testimonialsTitle": "Perspectives from<br><span class=\"muted-title\">working together.</span>",
+    "testimonialsText": "Stories and experiences from people who have worked with me.",
+    "testimonialsEmptyTitle": "A space for collaboration stories.",
+    "testimonialsEmpty": "No testimonials have been published yet.",
+    "testimonialsCTA": "Explore my work",
+    "labelFAQ": "FREQUENTLY ASKED",
+    "faqTitle": "Before we<br><span class=\"muted-title\">start a conversation.</span>",
+    "faqText": "A few things you might want to know about this portfolio.",
+    "faqCTA": "Ask another question",
+    "faqEmpty": "No questions have been published yet. Please contact me for more information."
   }
 }

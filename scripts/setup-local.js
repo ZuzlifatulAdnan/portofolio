@@ -42,7 +42,7 @@ const {setupDatabase}=require('./setup-db');
   ''
  ].join('\n'),{flag:'wx',mode:0o600});
  try{
-  await query('INSERT INTO admins(email,password_hash,name,role) VALUES(?,?,?,?)',[email,hashPassword(password),'Administrator Lokal','admin']);
+  await query('INSERT INTO admins(email,password_hash,name,role) VALUES(?,?,?,?)',[email,await hashPassword(password),'Administrator Lokal','admin']);
  }catch(error){fs.unlinkSync(accessFile);throw error}
  console.log('Admin lokal dibuat dengan password acak. Buka storage/AKSES_LOKAL.txt untuk melihat akses login.');
 })().catch(error=>{

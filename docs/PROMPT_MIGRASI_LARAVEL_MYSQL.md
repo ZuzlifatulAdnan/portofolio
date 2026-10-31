@@ -5,7 +5,7 @@
 > Pilih opsi ini bila ingin backend Laravel/PHP yang lebih mudah diintegrasikan dengan infrastruktur MySQL dan pola deployment existing. **Jangan jalankan prompt Node dan Laravel sekaligus pada satu branch**. Backup folder dan database starter sebelum migrasi. Hasil akhir wajib satu codebase yang konsisten.
 
 ```text
-Anda adalah Senior Laravel Full-Stack Architect, AppSec Engineer, DBA, dan UI Motion Designer. Saya memiliki source Portfolio Pribadi IT CMS di repository yang sedang dibuka. Migrasikan backend Node.js + SQLite menjadi Laravel + MySQL/MariaDB dengan tetap mempertahankan HTML/CSS/JS frontend dan semua animasi/tampilan Personal Portfolio yang sudah ada.
+Anda adalah Senior Laravel Full-Stack Architect, AppSec Engineer, DBA, dan UI Motion Designer. Saya memiliki source Portfolio Pribadi IT CMS di repository yang sedang dibuka. Backend saat ini sudah Node.js + MySQL. Migrasikan framework backend ke Laravel + MySQL/MariaDB hanya jika prompt ini secara eksplisit diaktifkan, dengan tetap mempertahankan data, HTML/CSS/JS frontend dan semua animasi/tampilan Personal Portfolio yang sudah ada.
 
 SOURCE OF TRUTH
 - Baca README.md, docs/BLUEPRINT_CMS.md, data/seed/id.json, data/seed/en.json, data/seed/ui.json, public/index.html, public/css/styles.css, public/js/app.js, public/admin/* dan server/*.

@@ -1,6 +1,7 @@
 'use strict';
 const { db, query, initializeDatabase, hashPassword } = require('../server/db');
 const {databaseError} = require('../server/config');
+const {validatePassword}=require('../server/passwords');
 const args=process.argv.slice(2);
 const index=args.indexOf('--email');
 const email=(index>=0?args[index+1]||'':'').trim().toLowerCase();
@@ -25,10 +26,10 @@ function promptHidden(label){
 }
 (async()=>{
  await initializeDatabase();
- const password=process.env.ADMIN_PASSWORD||await promptHidden('Admin password (hidden; at least 12 characters): ');
- if(password.length<12||password.length>256)throw new Error('Password must contain 12–256 characters');
+ const password=process.env.ADMIN_PASSWORD||await promptHidden('Admin password (hidden; at least 15 characters): ');
+ const error=validatePassword(password);if(error)throw new Error(error);
  const [existing]=await query('SELECT id FROM admins WHERE email=?',[email]);
  if(existing){throw new Error('Admin already exists; password was not changed.')} // Prevent accidental resets.
- await query('INSERT INTO admins(email,password_hash,name,role) VALUES(?,?,?,?)',[email,hashPassword(password),'Administrator','admin']);
+ await query('INSERT INTO admins(email,password_hash,name,role) VALUES(?,?,?,?)',[email,await hashPassword(password),'Administrator','admin']);
  console.log(`Admin created: ${email}. Sign in at /admin. No default password was stored.`);
 })().catch(err=>{console.error(databaseError(err));process.exitCode=1}).finally(()=>db.end());

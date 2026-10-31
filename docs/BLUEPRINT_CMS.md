@@ -42,17 +42,24 @@ Dashboard → Profil ID/EN → Layanan → Proyek → Pengalaman → Skill/Tech 
 
 ## Implementasi yang tersedia di paket saat ini
 
-**Node.js (built-in HTTP) + SQLite** dengan dua record `content` berisi JSON data locale, serta tabel admin/sesi/media/pesan/audit. Hasil bisa langsung dilihat saat menjalankan `npm start`. Data konten publik diambil dari endpoint backend; bila dibuka statis, konten demo ID/EN tersedia dari `public/js/content.js`.
+**Node.js (built-in HTTP) + MySQL** melalui `mysql2`, dengan dua record `content` berisi JSON data locale, serta tabel admin/sesi/media/pesan/audit. Konfigurasi `.env` dibaca melalui `dotenv`. Aktifkan MySQL, jalankan `npm install` dan `npm run setup:local`, lalu `npm start`. Data konten publik diambil dari endpoint backend; bila dibuka statis, konten demo ID/EN tersedia dari `public/js/content.js`.
 
-### Database SQLite saat ini
+### Database MySQL saat ini
 
 - `admins(id, email UNIQUE, password_hash, name, role, created_at)`
 - `sessions(token_hash PK, admin_id FK, csrf_token, created_at, expires_at)`
-- `content(locale PK [id/en], payload JSON-string, updated_at)`
+- `content(locale PK [id/en], payload JSON, updated_at)`
 - `login_attempts(lookup_key PK, tries, first_at, blocked_until)`
 - `messages(id, name, email, topic, message, locale, status, created_at)`
 - `media(id, filename, original_name, content_type, size_bytes, created_at)`
 - `audit_log(id, admin_id, operation, detail, created_at)`
+- `site_settings(id, payload JSON, updated_at)` untuk SEO, warna, tema, dan preferensi tampilan.
+- `rate_limits(lookup_key PK, hits, expires_at)` untuk pembatasan login/kontak/API yang bertahan setelah restart. Tabel `login_attempts` lama dipertahankan untuk kompatibilitas data, tetapi pembatasan baru memakai `rate_limits`.
+- Sesi kini juga memiliki `last_seen_at` untuk batas tidak aktif 30 menit. Migrasi otomatis mempertahankan konten yang sudah ada.
+
+Menu pengaturan admin dan cakupan penguatan keamanan dijelaskan dalam `KEAMANAN_DAN_SEO.md`.
+
+Konten per bahasa kini juga memiliki koleksi `faqs` dan `testimonials`. FAQ memakai status draft/published; testimoni published juga memerlukan izin publikasi. Kedua koleksi disaring pada API/HTML publik dan didukung integrasi terjemahan. Logo teknologi menggunakan aset SVG lokal; lihat `FAQ_TESTIMONI_DAN_TECH.md`.
 
 ### Rancangan database untuk versi Laravel + MySQL (fase migrasi)
 

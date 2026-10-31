@@ -1,0 +1,53 @@
+.tech-logos{display:inline-flex;align-items:center;justify-content:center;gap:4px;flex-shrink:0;vertical-align:middle}
+.tech-logo{display:block;width:17px;height:17px;flex:none;background-color:var(--tech-brand,currentColor);mask-image:var(--tech-mask);mask-size:contain;mask-position:center;mask-repeat:no-repeat;-webkit-mask-image:var(--tech-mask);-webkit-mask-size:contain;-webkit-mask-position:center;-webkit-mask-repeat:no-repeat}
+html[data-theme='dark'] .tech-logo:is([data-brand='github'],[data-brand='mikrotik']){background-color:#d7e1e1}
+html[data-theme='light'] .tech-logo:is([data-brand='javascript'],[data-brand='linux'],[data-brand='react'],[data-brand='android']){background-color:var(--text)}
+.tech-label{min-width:0;overflow-wrap:anywhere}
+.tech-tag{display:inline-flex;align-items:center;gap:7px;max-width:100%;vertical-align:middle}
+:is(.service-tags,.project-tag-row,.modal-pills,.skills-group) :is(.tech-logos,.tech-logo,.tech-label){border:0;padding:0;margin:0;border-radius:0;font:inherit;white-space:normal}
+:is(.service-tags,.project-tag-row,.modal-pills,.skills-group) .tech-logo{width:15px;height:15px}
+:is(.service-tags,.project-tag-row,.modal-pills,.skills-group) :is(.tech-logos,.tech-label){background:transparent}
+:is(.service-tags,.project-tag-row,.modal-pills,.skills-group) .tech-logo{background-color:var(--tech-brand,currentColor)}
+.tech-generic.icon{width:16px;height:16px;color:var(--subtle)}
+.skills-group li.tech-skill{display:inline-flex;align-items:center;gap:8px;max-width:100%;padding:7px 9px}
+.skills-group li.tech-skill:before{display:none}
+.section-testimonials{padding:120px 0;background:var(--bg-2)}
+.testimonials-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:20px}
+.testimonial-card{position:relative;display:flex;flex-direction:column;min-width:0;margin:0;padding:30px;border:1px solid var(--line);border-radius:20px;background:var(--panel)}
+.testimonial-card:only-child{grid-column:1/-1}.testimonial-card:only-child blockquote{max-width:900px}
+.testimonial-quote-mark{font:80px/.8 Georgia,serif;color:var(--accent);height:54px;display:block;margin-bottom:15px}
+.testimonial-card blockquote{padding:0;margin:0 0 30px;flex:1}
+.testimonial-card blockquote p{font-size:16px;line-height:1.85;letter-spacing:-.025em;white-space:pre-wrap;overflow-wrap:anywhere}
+.testimonial-card figcaption{display:flex;align-items:center;gap:13px;padding-top:22px;border-top:1px solid var(--line-light)}
+.testimonial-avatar{display:grid;place-items:center;width:46px;height:46px;flex:none;border:1px solid var(--line);border-radius:50%;background:var(--bg-2);overflow:hidden;font:11px var(--mono);color:var(--accent)}
+.testimonial-avatar img{width:100%;height:100%;object-fit:cover}
+.testimonial-person{display:flex;flex-direction:column;gap:4px;min-width:0;overflow-wrap:anywhere}
+.testimonial-person cite{font-size:13px;font-weight:700;font-style:normal}
+.testimonial-person>span{font-size:11px;line-height:1.6;color:var(--muted)}
+.testimonials-empty{grid-column:1/-1;display:flex;align-items:center;gap:28px;padding:34px 38px;border:1px dashed var(--line);border-radius:20px;background:var(--panel)}
+.testimonial-empty-mark{display:block;flex:none;color:var(--accent);font:94px/1 Georgia,serif;height:64px;opacity:.7}
+.testimonials-empty h3{font-size:23px;letter-spacing:-.04em;margin:0 0 10px}
+.testimonials-empty p{color:var(--muted);font-size:13px;line-height:1.8;margin:0}
+.testimonials-empty .btn{margin-left:auto;font-size:12px;flex:none}
+.section-faq{padding:130px 0;background:var(--bg)}
+.faq-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.35fr);gap:8%;align-items:start}
+.faq-intro{position:sticky;top:110px}
+.faq-intro .section-label{margin-bottom:30px;font:11px var(--mono);letter-spacing:.1em}
+.faq-intro h2{font-size:clamp(37px,3.6vw,58px);line-height:1.1;letter-spacing:-.06em;margin:0 0 22px}
+.faq-intro>p{font-size:14px;line-height:1.9;color:var(--muted);max-width:370px;margin:0 0 30px}
+.faq-intro .btn{font-size:12px;min-height:48px}
+.faq-list{min-width:0;border-top:1px solid var(--line)}
+.faq-item{border-bottom:1px solid var(--line);min-width:0}
+.faq-item summary{display:flex;align-items:center;gap:17px;min-height:82px;padding:22px 0;list-style:none;cursor:pointer;outline-offset:5px}
+.faq-item summary::-webkit-details-marker{display:none}
+.faq-number{font:10px var(--mono);color:var(--accent);flex:none;min-width:20px}
+.faq-question{font-size:16px;line-height:1.6;font-weight:600;letter-spacing:-.02em;flex:1;min-width:0;overflow-wrap:anywhere}
+.faq-toggle{display:grid;place-items:center;width:28px;height:28px;flex:none;border:1px solid var(--line);border-radius:50%;font:19px/1 var(--mono);color:var(--muted);transition:transform .2s,color .2s,border-color .2s}
+.faq-item[open] .faq-toggle{transform:rotate(45deg);color:var(--accent);border-color:var(--accent)}
+.faq-item[open] .faq-question{color:var(--accent)}
+.faq-answer{padding:0 45px 25px 37px}
+.faq-answer p{font-size:14px;line-height:1.9;color:var(--muted);margin:0;white-space:pre-wrap;overflow-wrap:anywhere}
+.community-empty{padding:24px 0;font-size:14px;line-height:1.8;color:var(--muted)}
+@media(max-width:1000px){.testimonials-grid{grid-template-columns:repeat(2,minmax(0,1fr))}.testimonials-empty{flex-wrap:wrap}.testimonials-empty .btn{margin-left:0}.faq-layout{gap:6%}}
+@media(max-width:700px){.section-testimonials,.section-faq{padding-block:88px}.testimonials-grid{grid-template-columns:1fr;gap:16px}.testimonial-card{padding:26px}.testimonials-empty{gap:16px;padding:26px}.testimonials-empty h3{font-size:21px}.testimonial-empty-mark{font-size:72px;height:48px}.faq-layout{grid-template-columns:1fr;gap:36px}.faq-intro{position:static}.faq-intro h2{font-size:clamp(37px,9vw,52px)}.faq-intro>p{font-size:13px;margin-bottom:24px}.faq-item summary{min-height:78px;gap:12px;padding-block:20px}.faq-question{font-size:14px}.faq-answer{padding:0 0 22px 32px}.faq-answer p{font-size:13px}.faq-toggle{width:26px;height:26px}.testimonial-card blockquote p{font-size:15px}}
+@media(prefers-reduced-motion:reduce){.faq-toggle{transition:none!important}}

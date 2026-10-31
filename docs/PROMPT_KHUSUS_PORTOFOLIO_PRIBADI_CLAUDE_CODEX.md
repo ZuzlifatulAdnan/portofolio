@@ -30,7 +30,7 @@ CMS/ADMIN & DATABASE
 - CRUD pengalaman, projek, skill, sertifikasi, contact inbox, media, SEO; upload dokumen aman; draft/publish/preview. Tambahkan versi data dan backup.
 - Semua perubahan harus persisten di database dan tersedia di frontend setelah disimpan tanpa edit code.
 - Lakukan pengecekan konsistensi ID/EN; jika translasi penting belum diisi jangan publish sebagai selesai.
-- Pertahankan Node.js + SQLite pada cabang ini, kecuali saya secara eksplisit mengaktifkan prompt migrasi Laravel + MySQL di dokumen lain. Jangan menumpuk dua backend sekaligus.
+- Pertahankan Node.js + MySQL dan konfigurasi lokal .env pada cabang ini. Migrasi framework ke Laravel hanya jika diminta pemilik. Jangan menumpuk dua backend sekaligus.
 
 KUALITAS
 - Gunakan WCAG termasuk prefers-reduced-motion, fokus keyboard, contrast, ARIA; target mobile 320px+, SEO Person structured data, canonical/hreflang, metadata sosial personal.

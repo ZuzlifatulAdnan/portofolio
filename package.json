@@ -12,10 +12,23 @@
     "db:setup": "node scripts/setup-db.js",
     "setup:local": "node scripts/setup-local.js",
     "create-admin": "node scripts/create-admin.js",
-    "test": "node --test"
+    "mfa:reset": "node scripts/reset-mfa.js",
+    "test": "node --test",
+    "test:browser": "node scripts/browser-check.js",
+    "assets:tech": "node scripts/build-tech-assets.js"
   },
   "dependencies": {
+    "cheerio": "^1.2.0",
     "dotenv": "^18.0.9",
-    "mysql2": "^3.24.6"
+    "entities": "^9.0.0",
+    "mysql2": "^3.24.6",
+    "otpauth": "^9.5.2",
+    "pdf-lib": "^1.17.1",
+    "qrcode": "^1.5.4",
+    "sharp": "^0.35.5"
+  },
+  "devDependencies": {
+    "playwright": "^1.64.1",
+    "simple-icons": "^16.36.0"
   }
 }

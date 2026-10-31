@@ -1,4 +1,11 @@
 {
+  "faqs": [
+    {"id":"start-conversation","question":"How can I start a conversation?","answer":"Send a message through the contact form or use the contact links on the profile. Include your needs, a brief scope, and information you are allowed to share to start the conversation.","visibility":"published"},
+    {"id":"project-contribution","question":"Where can I explore your projects and contributions?","answer":"Visit the projects section and select View details. Each case study provides space for the challenge, approach, technologies, results, and personal contribution. Sample projects carry a demo label.","visibility":"published"},
+    {"id":"portfolio-languages","question":"Is the portfolio available in two languages?","answer":"Yes. Use the ID or EN buttons at the top of the page to choose Bahasa Indonesia or English.","visibility":"published"},
+    {"id":"documents-and-certificates","question":"How can I access the CV or certification evidence?","answer":"Available documents can be accessed through the CV button or the links on certification cards. If a document you need is not available yet, please use the contact form.","visibility":"published"}
+  ],
+  "testimonials": [],
   "brand": "Nama Anda",
   "brandSuffix": "IT Developer",
   "fullName": "Your Full Name",
