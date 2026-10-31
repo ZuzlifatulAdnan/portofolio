@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="id" data-theme="dark">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="robots" content="noindex,nofollow" />
+  <title>Portfolio Pribadi — Admin CMS</title>
+  <link rel="icon" href="/assets/favicon.svg" type="image/svg+xml" />
+  <link rel="stylesheet" href="/admin/admin.css" />
+  <script src="/admin/admin.js" defer></script>
+</head>
+<body>
+<div class="ambient ambient-one"></div><div class="ambient ambient-two"></div>
+<section class="login-layout" id="login-layout">
+  <div class="login-info">
+    <a class="brand" href="/"><span class="brand-mark">✳</span> My<span>Portfolio.</span></a>
+    <div class="login-lead"><div class="eyebrow"><i class="status-indicator"></i> PERSONAL PORTFOLIO CMS</div>
+    <h1>Your work.<br><em>Your story.</em></h1>
+    <p>Kelola cerita profesional, proyek, pengalaman, dan sertifikasi Anda. Satu dashboard untuk portofolio seorang IT developer, dalam Bahasa Indonesia dan English.</p>
+    <div class="decor-terminal"><span>PORTFOLIO / ADMIN</span><code><b>›</b> secure content workspace</code><code><b>›</b> bilingual publishing · id/en</code><code><b>›</b> project & certificate assets</code><code><b>✓</b> your work, your narrative</code></div></div>
+    <div class="login-footer">PERSONAL PORTFOLIO <span>CMS · 3.0</span></div>
+  </div>
+  <div class="login-card-wrap"><form id="login-form" class="login-card" autocomplete="on">
+    <span class="pill">✳ &nbsp; RESTRICTED AREA</span>
+    <h2>Selamat datang kembali.</h2>
+    <p>Masuk untuk mengelola konten website.</p>
+    <label for="login-email">Alamat email</label><input id="login-email" name="email" type="email" autocomplete="username" placeholder="admin@email.com" required />
+    <label for="login-password">Password</label><input id="login-password" name="password" type="password" autocomplete="current-password" placeholder="Masukkan password admin" required />
+    <button type="submit" class="primary" id="login-submit">Masuk ke Dashboard <span>↗</span></button>
+    <div class="login-alert" id="login-alert" role="alert" hidden></div>
+    <small>Akun administrator dibuat melalui terminal dengan perintah <code>npm run create-admin</code>. Tidak ada akun/password default.</small>
+  </form></div>
+</section>
+<div id="admin-layout" class="admin-layout" hidden>
+  <aside class="sidebar">
+    <a class="brand sidebar-brand" href="/"><span class="brand-mark">✳</span> My<span>Portfolio.</span></a>
+    <div class="workspace-label">PORTFOLIO WORKSPACE <span>02 / CMS</span></div>
+    <div class="sidebar-heading">KONTEN WEBSITE</div>
+    <nav class="sidebar-nav" id="sidebar-nav" aria-label="Menu Admin"></nav>
+    <div class="sidebar-bottom"><div class="admin-avatar">ME</div><div><strong id="admin-name">Administrator</strong><small id="admin-email"></small></div><button type="button" class="sidebar-logout" id="logout-button" title="Keluar">⎋</button></div>
+  </aside>
+  <main class="main-panel">
+    <header class="topbar"><div><span class="crumb">PERSONAL PORTFOLIO <span class="crumb-slash">/</span> <span id="breadcrumb">Profil</span></span></div><div class="topbar-actions"><a href="/?lang=id" target="_blank" rel="noopener" class="preview-link">Lihat Website ↗</a><span class="admin-chip"><i></i> ADMIN</span><button type="button" id="logout-button-top" class="admin-top-logout">Keluar</button></div></header>
+    <div class="page-content">
+      <div class="page-hero"><div><p class="eyebrow section-eyebrow">MANAGE · CUSTOMIZE · PUBLISH</p><h1 id="page-title">Konten Website</h1><p id="page-description">Semua perubahan disimpan ke database dan muncul pada website publik.</p></div><div class="page-hero-right"><div class="lang-label">BAHASA KONTEN</div><div class="locale-toggle"><button type="button" data-locale="id" aria-pressed="true">🇮🇩 ID</button><button type="button" data-locale="en" aria-pressed="false">🇬🇧 EN</button></div></div></div>
+      <div class="notice" id="content-notice"><strong>Tips:</strong> Lengkapi konten pada kedua bahasa. Konten versi ID dan EN disimpan terpisah.</div>
+      <div id="editor-view" class="editor-layout"><section class="item-panel" id="item-panel"><div class="panel-top"><h2>Daftar Konten</h2><button id="add-button" class="small-add" type="button">+ Tambah</button></div><div class="item-list" id="item-list"></div><div class="small-note">Urutan konten menentukan urutan tampil pada website.</div></section><section class="form-panel"><div class="panel-top"><div><span class="panel-eyebrow" id="edit-eyebrow">EDIT CONTENT</span><h2 id="editor-title">Edit Konten</h2></div><div class="reorder-buttons" id="reorder-buttons"><button type="button" id="move-up" title="Naikkan urutan">↑</button><button type="button" id="move-down" title="Turunkan urutan">↓</button><button type="button" class="danger" id="delete-item" title="Hapus item">×</button></div></div><form id="content-form"><div class="form-fields" id="form-fields"></div><div class="form-footer"><span id="unsaved-label">Tidak ada perubahan</span><button type="submit" class="primary" id="save-button">Simpan Perubahan <span>↗</span></button></div></form></section></div>
+      <div id="messages-view" class="messages-view" hidden><div class="panel-top"><h2>Pesan Masuk <span id="unread-count"></span></h2><button type="button" id="refresh-messages">↻ Muat Ulang</button></div><div id="message-list"></div></div>
+      <div id="media-view" class="messages-view" hidden><div class="panel-top"><h2>Media Library</h2><button type="button" id="upload-media">+ Unggah Berkas</button></div><p>Foto dan sertifikat yang diunggah tersedia di bawah. Klik path untuk menyalinnya ke editor konten.</p><div id="media-list"></div></div>
+      <p class="admin-footnote">© Personal Portfolio · Konten harus merupakan karya, pengalaman, dan sertifikasi yang benar-benar terverifikasi.</p>
+    </div>
+  </main>
+</div>
+<div id="toast" role="status" aria-live="polite"></div>
+<input id="file-picker" type="file" accept="image/png,image/jpeg,image/webp,application/pdf" hidden />
+</body></html>

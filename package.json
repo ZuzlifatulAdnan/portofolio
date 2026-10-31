@@ -1,0 +1,21 @@
+{
+  "name": "personal-it-portfolio-cms",
+  "version": "3.0.0",
+  "private": true,
+  "description": "Bilingual personal IT developer portfolio with private admin CMS and MySQL",
+  "engines": {
+    "node": ">=20.20.0"
+  },
+  "scripts": {
+    "start": "node server/index.js",
+    "dev": "node --watch server/index.js",
+    "db:setup": "node scripts/setup-db.js",
+    "setup:local": "node scripts/setup-local.js",
+    "create-admin": "node scripts/create-admin.js",
+    "test": "node --test"
+  },
+  "dependencies": {
+    "dotenv": "^18.0.9",
+    "mysql2": "^3.24.6"
+  }
+}

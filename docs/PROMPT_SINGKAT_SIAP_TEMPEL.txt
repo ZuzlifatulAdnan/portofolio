@@ -1,0 +1,5 @@
+Saya memiliki source Portfolio Pribadi IT CMS di working directory. Lanjutkan pengembangannya, jangan buat ulang desain dari nol.
+Baca README.md, docs/BLUEPRINT_CMS.md, dan docs/PROMPT_AGENT_CLAUDE_CODEX.md sebagai instruksi utama.
+Prioritas: portofolio bilingual Indonesia–English yang konsisten, login admin & CRUD nyata tersimpan database, pengelolaan proyek/sertifikasi/pengalaman/media/kontak, draft–publish, validasi keamanan, responsive, SEO, dan animasi premium tanpa merusak CSS/JS asli.
+Gunakan stack existing Node.js+SQLite dahulu. Jangan mengarang data proyek atau sertifikasi BNSP. Jalankan test, perbaiki error, update dokumentasi, dan laporkan DONE/PARTIAL/NOT DONE dengan bukti.
+Mulai audit sekarang, lalu langsung implementasikan perubahan.

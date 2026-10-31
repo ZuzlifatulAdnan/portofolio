@@ -1,0 +1,401 @@
+{
+  "brand": "Nama Anda",
+  "brandSuffix": "IT Developer",
+  "fullName": "Your Full Name",
+  "initials": "YN",
+  "heroRole": "WEB · MOBILE · NETWORK · IT SUPPORT | PERSONAL PORTFOLIO",
+  "heroHeading": [
+    "I build",
+    "digital solutions",
+    "with purpose."
+  ],
+  "heroDescription": "I am an IT developer focused on web applications, mobile apps, networking infrastructure, and IT operations. Here I document my projects, experience, and professional growth.",
+  "email": "yourname@example.com",
+  "location": "Indonesia",
+  "availabilityText": "Open to career opportunities and collaborations",
+  "bio": [
+    "Hello, I am [Your Full Name]. My interests span web and mobile development, network infrastructure, servers, and IT support.",
+    "This is my personal portfolio: what I personally contributed to each project, my professional experience, the tools I use, and verifiable certifications. Replace these examples with your actual background before publishing."
+  ],
+  "aboutQuote": "Every project tells a story. I focus on the process, my individual contribution, and results I can substantiate.",
+  "cvUrl": "",
+  "avatarUrl": "",
+  "socials": [
+    {
+      "label": "GitHub",
+      "url": ""
+    },
+    {
+      "label": "LinkedIn",
+      "url": ""
+    },
+    {
+      "label": "Instagram",
+      "url": ""
+    }
+  ],
+  "services": [
+    {
+      "number": "01",
+      "icon": "code",
+      "label": "WEB DEVELOPMENT",
+      "title": "Websites & Web Applications",
+      "summary": "Modern websites, information systems, dashboards, portals, and API integrations built to be fast, secure, and maintainable.",
+      "tags": [
+        "Full-stack Apps",
+        "API Integration",
+        "UI Engineering"
+      ],
+      "tone": "lime"
+    },
+    {
+      "number": "02",
+      "icon": "phone",
+      "label": "MOBILE DEVELOPMENT",
+      "title": "Mobile Applications",
+      "summary": "Mobile applications with intuitive user journeys, responsive performance, and seamless backend connectivity.",
+      "tags": [
+        "Android",
+        "Cross-platform",
+        "REST API"
+      ],
+      "tone": "violet"
+    },
+    {
+      "number": "03",
+      "icon": "network",
+      "label": "NETWORK ENGINEERING",
+      "title": "Networks & Infrastructure",
+      "summary": "Network design, routing, segmentation, connectivity, VPS management, monitoring, and infrastructure hardening.",
+      "tags": [
+        "MikroTik",
+        "Linux Server",
+        "Network Security"
+      ],
+      "tone": "cyan"
+    },
+    {
+      "number": "04",
+      "icon": "headset",
+      "label": "IT OPERATIONS",
+      "title": "IT Support & Operations",
+      "summary": "Troubleshooting, deployment, system maintenance, technical documentation, and dependable daily IT operations.",
+      "tags": [
+        "Deployment",
+        "Troubleshooting",
+        "Maintenance"
+      ],
+      "tone": "orange"
+    }
+  ],
+  "projects": [
+    {
+      "id": "sirespa",
+      "category": "web",
+      "categoryLabel": "WEB APPLICATION",
+      "title": "Information System & Dashboard",
+      "subtitle": "Bringing billing, payments, and monitoring together in one system.",
+      "status": "DEMO / NOT CLAIMED WORK",
+      "year": "01",
+      "art": "dashboard",
+      "image": "",
+      "tags": [
+        "Laravel",
+        "MySQL",
+        "Payment Workflow"
+      ],
+      "challenge": "How can billing, payment recording, and service-fee monitoring become more structured?",
+      "solution": "A sample multi-role dashboard design for customers, recurring billing, payments, and operational reporting.",
+      "highlights": [
+        "Role-based dashboards",
+        "Billing and payments",
+        "Reporting and audit trail"
+      ],
+      "result": "[Add verified outcomes and evidence before publishing]",
+      "role": "[Describe your individual contribution]",
+      "link": "",
+      "github": "",
+      "visibility": "demo"
+    },
+    {
+      "id": "presensi",
+      "category": "mobile",
+      "categoryLabel": "MOBILE EXPERIENCE",
+      "title": "Mobile App & Attendance",
+      "subtitle": "An intuitive mobile attendance experience for employees.",
+      "status": "DEMO / NOT CLAIMED WORK",
+      "year": "02",
+      "art": "mobile",
+      "image": "",
+      "tags": [
+        "Mobile UI",
+        "Attendance",
+        "Backend API"
+      ],
+      "challenge": "How can employees register attendance and view their history conveniently on mobile devices?",
+      "solution": "A proposed application journey covering login, check-in, attendance history, and synchronization with management systems.",
+      "highlights": [
+        "Mobile-first interface",
+        "Attendance history",
+        "Service integration"
+      ],
+      "result": "[Add verified outcomes and evidence before publishing]",
+      "role": "[Describe your individual contribution]",
+      "link": "",
+      "github": "",
+      "visibility": "demo"
+    },
+    {
+      "id": "kms",
+      "category": "web",
+      "categoryLabel": "PLATFORM DEVELOPMENT",
+      "title": "Digital Learning Platform",
+      "subtitle": "A cross-organization learning and knowledge-sharing portal.",
+      "status": "DEMO / NOT CLAIMED WORK",
+      "year": "03",
+      "art": "knowledge",
+      "image": "",
+      "tags": [
+        "Laravel",
+        "Moodle",
+        "SSO Ready"
+      ],
+      "challenge": "How can learning resources and organizational knowledge come together in a scalable portal?",
+      "solution": "An LMS/KMS portal concept featuring knowledge resources, role-based and organization-scoped access, and SSO-ready architecture.",
+      "highlights": [
+        "LMS / KMS portal",
+        "Multiple organizations",
+        "Integration architecture"
+      ],
+      "result": "[Add verified outcomes and evidence before publishing]",
+      "role": "[Describe your individual contribution]",
+      "link": "",
+      "github": "",
+      "visibility": "demo"
+    },
+    {
+      "id": "api",
+      "category": "web",
+      "categoryLabel": "SYSTEM INTEGRATION",
+      "title": "Multi-System API Integration",
+      "subtitle": "Connecting multiple services through a unified API architecture.",
+      "status": "DEMO / NOT CLAIMED WORK",
+      "year": "04",
+      "art": "api",
+      "image": "",
+      "tags": [
+        "REST API",
+        "Authentication",
+        "Integration"
+      ],
+      "challenge": "How can teams reduce complexity when several systems exchange data securely and consistently?",
+      "solution": "A sample API gateway architecture with service authentication, response standardization, logging, and access control.",
+      "highlights": [
+        "API standardization",
+        "Access control",
+        "Observability"
+      ],
+      "result": "[Add verified outcomes and evidence before publishing]",
+      "role": "[Describe your individual contribution]",
+      "link": "",
+      "github": "",
+      "visibility": "demo"
+    },
+    {
+      "id": "network",
+      "category": "network",
+      "categoryLabel": "NETWORK ENGINEERING",
+      "title": "Network Infrastructure Setup",
+      "subtitle": "Routing, DNS, network security, and server services.",
+      "status": "DEMO / NOT CLAIMED WORK",
+      "year": "05",
+      "art": "network",
+      "image": "",
+      "tags": [
+        "MikroTik",
+        "Ubuntu",
+        "DNS / NAT"
+      ],
+      "challenge": "How can organizations maintain stable connectivity while controlling access and traffic routing?",
+      "solution": "Illustrative topology documentation covering routing, NAT, DNS, firewall configuration, and server-to-server diagnostics.",
+      "highlights": [
+        "Topology planning",
+        "Routing and firewall",
+        "Connectivity testing"
+      ],
+      "result": "[Add verified outcomes and evidence before publishing]",
+      "role": "[Describe your individual contribution]",
+      "link": "",
+      "github": "",
+      "visibility": "demo"
+    },
+    {
+      "id": "support",
+      "category": "support",
+      "categoryLabel": "IT OPERATIONS",
+      "title": "Deployment & IT Support",
+      "subtitle": "Keeping applications and infrastructure available.",
+      "status": "DEMO / NOT CLAIMED WORK",
+      "year": "06",
+      "art": "terminal",
+      "image": "",
+      "tags": [
+        "VPS",
+        "Nginx",
+        "Troubleshooting"
+      ],
+      "challenge": "How can deployment become repeatable while reducing the time needed to investigate incidents?",
+      "solution": "A sample workflow for deployments, environment configuration, service management, log analysis, and incident documentation.",
+      "highlights": [
+        "Server deployment",
+        "Incident diagnosis",
+        "Technical documentation"
+      ],
+      "result": "[Add verified outcomes and evidence before publishing]",
+      "role": "[Describe your individual contribution]",
+      "link": "",
+      "github": "",
+      "visibility": "demo"
+    }
+  ],
+  "experiences": [
+    {
+      "title": "Web Applications & Digital Portals",
+      "type": "EXPERIENCE AREA",
+      "detail": "Designing system workflows, building interfaces, modeling data, and integrating web services.",
+      "points": [
+        "Web applications",
+        "Dashboards and workflows",
+        "REST APIs"
+      ]
+    },
+    {
+      "title": "Mobile App Development",
+      "type": "EXPERIENCE AREA",
+      "detail": "Turning real user needs into mobile apps centered on usability and accessibility.",
+      "points": [
+        "Mobile UX",
+        "Backend integration",
+        "Functional testing"
+      ]
+    },
+    {
+      "title": "Network & Server Administration",
+      "type": "EXPERIENCE AREA",
+      "detail": "Operating networks and servers to support secure, reliable services.",
+      "points": [
+        "MikroTik",
+        "Linux VPS",
+        "Deployment"
+      ]
+    },
+    {
+      "title": "IT Support & Problem Solving",
+      "type": "EXPERIENCE AREA",
+      "detail": "Investigating technical incidents, troubleshooting problems, and documenting solutions.",
+      "points": [
+        "Incident handling",
+        "Maintenance",
+        "Technical support"
+      ]
+    }
+  ],
+  "skills": [
+    {
+      "title": "Development",
+      "icon": "code",
+      "items": [
+        "PHP / Laravel",
+        "JavaScript",
+        "HTML / CSS",
+        "Tailwind CSS",
+        "REST API",
+        "MySQL"
+      ]
+    },
+    {
+      "title": "Mobile & Product",
+      "icon": "phone",
+      "items": [
+        "Mobile UI/UX",
+        "Android / Cross-platform",
+        "API Integration",
+        "Responsive Design",
+        "Testing"
+      ]
+    },
+    {
+      "title": "Infrastructure",
+      "icon": "server",
+      "items": [
+        "MikroTik RouterOS",
+        "Linux / Ubuntu",
+        "Nginx / Apache",
+        "DNS & Routing",
+        "Firewall / NAT",
+        "VPS"
+      ]
+    },
+    {
+      "title": "Workflow & Tools",
+      "icon": "workflow",
+      "items": [
+        "Git & GitHub",
+        "Deployment",
+        "Documentation",
+        "Debugging",
+        "System Analysis",
+        "IT Support"
+      ]
+    }
+  ],
+  "certifications": [
+    {
+      "issuer": "BNSP",
+      "name": "Professional Competency Certification",
+      "subtitle": "Certification scheme not yet specified",
+      "year": "–",
+      "number": "",
+      "status": "NOT PROVIDED",
+      "image": "",
+      "url": ""
+    },
+    {
+      "issuer": "OTHER",
+      "name": "Technical Certifications & Training",
+      "subtitle": "Add verified certifications from recognized organizations",
+      "year": "–",
+      "number": "",
+      "status": "NOT PROVIDED",
+      "image": "",
+      "url": ""
+    }
+  ],
+  "steps": [
+    {
+      "number": "01",
+      "title": "Understand",
+      "subtitle": "Understand the real business goals and challenges."
+    },
+    {
+      "number": "02",
+      "title": "Architect",
+      "subtitle": "Design workflows, architecture, and a solid technical foundation."
+    },
+    {
+      "number": "03",
+      "title": "Build",
+      "subtitle": "Develop incrementally with clean and maintainable code."
+    },
+    {
+      "number": "04",
+      "title": "Secure & Test",
+      "subtitle": "Validate functionality, access, security, and reliability."
+    },
+    {
+      "number": "05",
+      "title": "Operate",
+      "subtitle": "Deploy, monitor, document, and continuously improve."
+    }
+  ]
+}
